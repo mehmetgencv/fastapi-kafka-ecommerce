@@ -1,6 +1,7 @@
-# app/schemas/user.py
+# app/schemas/user_schema.py
 
 from pydantic import BaseModel, EmailStr
+from typing import Optional
 
 
 class UserBase(BaseModel):
@@ -11,6 +12,10 @@ class UserBase(BaseModel):
 
 class UserCreate(UserBase):
     password: str
+
+
+class UserUpdate(UserBase):
+    password: Optional[str] = None
 
 
 class UserOut(UserBase):
