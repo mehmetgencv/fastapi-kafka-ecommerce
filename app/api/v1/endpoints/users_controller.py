@@ -1,9 +1,8 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 from app.schemas.user_schema import UserCreate, UserUpdate, UserOut
 from app.service.user_service import (
     get_user as service_get_user,
-    get_user_by_email as service_get_user_by_email,
     get_users as service_get_users,
     create_user as service_create_user,
     update_user as service_update_user,

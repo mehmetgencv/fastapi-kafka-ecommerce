@@ -2,6 +2,7 @@ from fastapi import Request, HTTPException
 from fastapi.responses import JSONResponse
 from app.exceptions.product_exceptions import ProductAlreadyExistsException, ProductNotFoundException
 from app.exceptions.user_exceptions import UserAlreadyExistsException
+from app.exceptions.category_exceptions import CategoryAlreadyExistsException
 
 exception_handlers = {}
 
@@ -34,12 +35,22 @@ async def http_exception_handler(request: Request, exc: HTTPException):
     )
 
 
+async def category_already_exists_exception_handler(request: Request, exc: CategoryAlreadyExistsException):
+    return JSONResponse(
+        status_code=400,
+        content={"detail": exc.detail}
+    )
+
+
 # Product
 exception_handlers[ProductAlreadyExistsException] = product_already_exists_exception_handler
 exception_handlers[ProductNotFoundException] = product_not_found_exception_handler
 
 # User
 exception_handlers[UserAlreadyExistsException] = user_already_exists_exception_handler
+
+# Category
+exception_handlers[CategoryAlreadyExistsException] = category_already_exists_exception_handler
 
 # General
 exception_handlers[HTTPException] = http_exception_handler

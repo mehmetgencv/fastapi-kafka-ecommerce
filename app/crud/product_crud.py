@@ -1,4 +1,6 @@
 from sqlalchemy.orm import Session
+
+from app.models.category import Category
 from app.models.product import Product
 from app.schemas.product_schema import ProductCreate, ProductUpdate
 
@@ -12,7 +14,17 @@ def get_products(db: Session, skip: int = 0, limit: int = 10):
 
 
 def create_product(db: Session, product: ProductCreate):
-    db_product = Product(**product.dict())
+    db_product = Product(
+        name=product.name,
+        description=product.description,
+        price=product.price,
+        quantity=product.quantity
+    )
+
+    if product.category_ids:
+        categories = db.query(Category).filter(Category.id.in_(product.category_ids)).all()
+        db_product.categories = categories
+
     db.add(db_product)
     db.commit()
     db.refresh(db_product)

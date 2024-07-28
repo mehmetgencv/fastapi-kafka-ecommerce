@@ -1,5 +1,7 @@
 from pydantic import BaseModel, Field
-from typing import Optional
+from typing import Optional, List
+
+from app.schemas.category_schema import CategoryOut
 
 
 class ProductBase(BaseModel):
@@ -10,7 +12,7 @@ class ProductBase(BaseModel):
 
 
 class ProductCreate(ProductBase):
-    pass
+    category_ids: List[int]
 
 
 class ProductUpdate(ProductBase):
@@ -18,6 +20,7 @@ class ProductUpdate(ProductBase):
     description: Optional[str] = None
     price: Optional[float] = None
     quantity: Optional[int] = None
+    category_ids: Optional[List[int]] = None
 
 
 class ProductInDBBase(ProductBase):
@@ -37,4 +40,7 @@ class ProductInDB(ProductInDBBase):
 
 class ProductOut(ProductInDBBase):
     """Schema for data returned to the client."""
-    pass
+    categories: List[CategoryOut]
+
+    class Config:
+        orm_mode = True

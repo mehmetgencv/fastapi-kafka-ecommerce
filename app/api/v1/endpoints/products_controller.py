@@ -1,6 +1,6 @@
 # app/api/v1/endpoints/products_controller.py
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 from app.schemas.product_schema import ProductCreate, ProductUpdate, ProductOut
 from app.service.product_service import (
@@ -23,7 +23,7 @@ def create_product(product: ProductCreate, db: Session = Depends(get_db)):
 
 @router.get("/products/{product_id}", response_model=ProductOut)
 def read_product(product_id: int, db: Session = Depends(get_db)):
-    product = service_get_products(db, product_id)
+    product = service_get_product(db, product_id)
     return product
 
 
