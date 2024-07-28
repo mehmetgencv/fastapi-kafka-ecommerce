@@ -16,38 +16,25 @@ router = APIRouter()
 
 @router.get("/users/{user_id}", response_model=UserOut)
 def get_user(user_id: int, db: Session = Depends(get_db)):
-    user = service_get_user(db, user_id)
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-    return user
+    return service_get_user(db, user_id)
 
 
 @router.get("/users", response_model=list[UserOut])
 def get_users(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
-    users = service_get_users(db, skip=skip, limit=limit)
-    return users
+    return service_get_users(db, skip=skip, limit=limit)
 
 
 @router.post("/users", response_model=UserOut, status_code=status.HTTP_201_CREATED)
 def create_user(user: UserCreate, db: Session = Depends(get_db)):
-    db_user = service_get_user_by_email(db, user.email)
-    if db_user:
-        raise HTTPException(status_code=400, detail="Email already registered")
     return service_create_user(db, user)
 
 
 @router.put("/users/{user_id}", response_model=UserOut)
 def update_user(user_id: int, user: UserUpdate, db: Session = Depends(get_db)):
-    db_user = service_get_user(db, user_id)
-    if not db_user:
-        raise HTTPException(status_code=404, detail="User not found")
     return service_update_user(db, user_id, user)
 
 
 @router.delete("/users/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_user(user_id: int, db: Session = Depends(get_db)):
-    db_user = service_get_user(db, user_id)
-    if not db_user:
-        raise HTTPException(status_code=404, detail="User not found")
     service_delete_user(db, user_id)
     return {"message": "User deleted successfully"}
