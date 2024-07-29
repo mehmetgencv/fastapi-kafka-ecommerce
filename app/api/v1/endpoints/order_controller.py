@@ -1,6 +1,6 @@
 from typing import List
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from app.api.deps import get_db
 from app.schemas.order_schema import OrderCreate, OrderUpdate, OrderOut
@@ -17,8 +17,6 @@ def create_order_endpoint(order: OrderCreate, db: Session = Depends(get_db)):
 @router.get("/orders/{order_id}", response_model=OrderOut)
 def read_order(order_id: int, db: Session = Depends(get_db)):
     db_order = get_order(db, order_id)
-    if db_order is None:
-        raise HTTPException(status_code=404, detail="Order not found")
     return db_order
 
 
@@ -30,14 +28,11 @@ def read_orders(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
 @router.put("/orders/{order_id}", response_model=OrderOut)
 def update_order_endpoint(order_id: int, order: OrderUpdate, db: Session = Depends(get_db)):
     db_order = update_order(db, order_id, order)
-    if db_order is None:
-        raise HTTPException(status_code=404, detail="Order not found")
+
     return db_order
 
 
 @router.delete("/orders/{order_id}", response_model=OrderOut)
 def delete_order_endpoint(order_id: int, db: Session = Depends(get_db)):
     db_order = delete_order(db, order_id)
-    if db_order is None:
-        raise HTTPException(status_code=404, detail="Order not found")
     return db_order
